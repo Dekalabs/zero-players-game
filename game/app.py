@@ -24,17 +24,17 @@ class App:
 
     def _color(self, value: float) -> int:
         """Gets the color for a given value."""
-        if value < 0.3:
+        if value < -0.4:
             return 5
-        elif value < 0.5:
+        elif value < 0:
             return 11
-        elif value < 0.8:
+        elif value < 0.4:
             return 3
         return 7
 
     def _step(self) -> None:
         """Make the movement."""
-        self.world.move_down()
+        self.world.move_left()
 
     def update_world(self):
         """Updates the status of the world."""
