@@ -2,4 +2,4 @@
 
 To run the test:
 
-    poetry run pyxel run test.py
+    poetry run pyxel run main.py
