@@ -17,7 +17,7 @@ class World:
             width * 3, height * 3
         )  # Generates a tile with the current chunk and the nearest chunks
 
-    def _generate_tile(self, width, height) -> "np.ndarray":
+    def _generate_tile(self, width: int, height: int) -> "np.ndarray":
         """Generates a complete tile."""
         return np.random.rand(width, height)
 
@@ -30,29 +30,29 @@ class World:
         else:
             raise Exception("The value of axis have to be 0 or 1")
 
-    def chunk(self):
+    def chunk(self) -> "np.ndarray":
         """Gets the central chunk."""
         return self.tile[self.width : -self.width, self.height : -self.height]
 
-    def move_left(self):
+    def move_left(self) -> None:
         """Moves the tiles to the left."""
         self.tile = np.concatenate((self._generate_tile_increment(), self.tile))[
             : -self.SPEED
         ]
 
-    def move_right(self):
+    def move_right(self) -> None:
         """Moves the tiles to the right."""
         self.tile = np.concatenate((self.tile, self._generate_tile_increment()))[
             self.SPEED :
         ]
 
-    def move_up(self):
+    def move_up(self) -> None:
         """Moves the tiles to the up."""
         self.tile = np.concatenate(
             (self._generate_tile_increment(axis=1), self.tile), axis=1
         )[:, : -self.SPEED]
 
-    def move_down(self):
+    def move_down(self) -> None:
         """Moves the tiles to the down."""
         self.tile = np.concatenate(
             (self.tile, self._generate_tile_increment(axis=1)), axis=1
