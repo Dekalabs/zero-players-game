@@ -6,7 +6,7 @@ class App:
     def __init__(self):
         self.screen_width = 1024
         self.screen_height = 600
-        self.blocksize = 10
+        self.blocksize = 2
 
         pyxel.init(self.screen_width, self.screen_height, title="Map")
 
@@ -39,7 +39,6 @@ class App:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
-        self.viewerposition_x += 1
         self.viewerposition_y += 1
 
         
@@ -47,18 +46,21 @@ class App:
     def draw(self):
         pyxel.cls(12)
 
-        for x in range(self.viewerposition_x, self.tilesize_width):
-            for y in range(self.viewerposition_y, self.tilesize_height):
-                current_pos = self.current_matrix[x, y]
-                current_color = self.color(current_pos)
+        for x in range(self.viewerposition_x, self.viewerposition_x+self.chunksize_width):
+            for y in range(self.viewerposition_y, self.viewerposition_y+self.chunksize_height):
+                if self.current_matrix.shape[0] > x & self.current_matrix.shape[1] > y:
+                    current_pos = self.current_matrix[x, y]
+                    current_color = self.color(current_pos)
 
-                pyxel.rect(
-                    x-self.viewerposition_x * self.blocksize,
-                    y-self.viewerposition_y * self.blocksize,
-                    self.blocksize,
-                    self.blocksize,
-                    int(current_color),
-                )
+                    pyxel.rect(
+                        (x-self.viewerposition_x) * self.blocksize,
+                        (y-self.viewerposition_y) * self.blocksize,
+                        self.blocksize,
+                        self.blocksize,
+                        int(current_color),
+                    )
+
+                    print ((x-self.viewerposition_x)*self.blocksize, (y-self.viewerposition_y)*self.blocksize, current_color)
 
 
 App()
