@@ -9,13 +9,18 @@ license = "MIT"
 python = "^3.9"
 pyxel = "^1.7.0"
 numpy = "^1.22.3"
+opensimplex = "^0.4.2"
+noise = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3.0"
+black = {extras = ["jupyter"], version = "^22.3.0"}
 isort = "^5.10.1"
 pylint = "^2.13.8"
 mypy = "^0.950"
 pre-commit = "^2.19.0"
+jupyter = "^1.0.0"
+matplotlib = "^3.5.2"
+ipython = "^8.3.0"
 
 [tool.isort]
 multi_line_output = 3
