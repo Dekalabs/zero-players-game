@@ -1,3 +1,5 @@
+import random
+
 import pyxel
 
 from game.world import World
@@ -11,6 +13,7 @@ class App:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.block_size = block_size
+        self.direction = 0
 
         # Creates the world
         self.world = World(
@@ -34,7 +37,15 @@ class App:
 
     def _step(self) -> None:
         """Make the movement."""
-        self.world.move_left()
+        change_direction = random.random()
+        if change_direction > 0.98:
+            self.direction = random.randint(0, 3)
+        {
+            0: self.world.move_up,
+            1: self.world.move_down,
+            2: self.world.move_left,
+            3: self.world.move_right,
+        }.get(self.direction)()
 
     def update_world(self):
         """Updates the status of the world."""
