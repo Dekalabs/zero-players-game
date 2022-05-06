@@ -6,7 +6,7 @@ authors = ["Marcos Gabarda <marcos@dekalabs.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">3.8,<4.0"
 pyxel = "^1.7.0"
 numpy = "^1.22.3"
 opensimplex = "^0.4.2"
