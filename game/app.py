@@ -23,6 +23,7 @@ class App:
         # Launch pyxel
         pyxel.init(self.screen_width, self.screen_height, title="Zero Players Game")
         pyxel.playm(0, loop=True)
+        pyxel.load('../assets/resources.pyxres')
         pyxel.run(self.update_world, self.draw_world)
 
     def _color(self, value: float) -> int:
@@ -52,8 +53,12 @@ class App:
         # Handles the quit event.
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
+
         # Movement
         self._step()
+
+        # Music
+        self.music_controls()
 
     def draw_world(self):
         """Draws the current view of the world."""
@@ -69,3 +74,9 @@ class App:
                     self.block_size,
                     color,
                 )
+
+    def music_controls(self):
+        if pyxel.btnp(pyxel.KEY_M):
+            pyxel.playm(0, loop=True)
+        if pyxel.btnp(pyxel.KEY_S):
+            pyxel.stop()
