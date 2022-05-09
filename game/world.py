@@ -10,7 +10,7 @@ class World:
     """Class that represents the generation of the world."""
 
     INCREMENT: int = 3
-    SCALE: int = 30
+    SCALE: int = 40
     BUFFER: int = 3
 
     def __init__(self, rows: int, columns: int, increment: Optional[int] = None):
@@ -28,8 +28,8 @@ class World:
     def _generate_tile(self, shape: Tuple[int, int]) -> "np.ndarray":
         """Generates a complete tile."""
         tile = opensimplex.noise2array(
-            np.arange(shape[0]) / self.SCALE, np.arange(shape[1]) / self.SCALE
-        ).T
+            np.arange(shape[1]) / self.SCALE, np.arange(shape[0]) / self.SCALE
+        )
         self.position = (shape[1] - 1, shape[0] - 1)
         return tile
 
