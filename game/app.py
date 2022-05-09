@@ -15,13 +15,14 @@ class App:
 
         # Creates the world
         self.world = World(
-            self.screen_width // self.block_size, self.screen_height // self.block_size
+            columns=self.screen_width // self.block_size,
+            rows=self.screen_height // self.block_size,
         )
 
         # Launch pyxel
         pyxel.init(self.screen_width, self.screen_height, title="Zero Players Game")
         pyxel.playm(0, loop=True)
-        pyxel.load('../assets/resources.pyxres')
+        pyxel.load("../assets/resources.pyxres")
         pyxel.run(self.update_world, self.draw_world)
 
     def _color(self, value: float) -> int:
@@ -44,7 +45,6 @@ class App:
             self.world.move_left()
         if pyxel.btn(pyxel.KEY_S):
             self.world.move_down()
-
 
     def update_world(self):
         """Updates the status of the world."""
