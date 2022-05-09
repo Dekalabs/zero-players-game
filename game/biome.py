@@ -23,10 +23,8 @@ class Biome:
 
     def _color(self, value: float) -> int:
         """Gets the color for a given value."""
-        if value < -0.4:
-            return 5
-        elif value < 0:
+        if value < 0:
             return 11
         elif value < 0.4:
             return 3
-        return 7
+        return 4
