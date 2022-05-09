@@ -1,5 +1,3 @@
-import random
-
 import pyxel
 
 from game.world import World
@@ -38,15 +36,15 @@ class App:
 
     def _step(self) -> None:
         """Make the movement."""
-        change_direction = random.random()
-        if change_direction > 0.98:
-            self.direction = random.randint(0, 3)
-        {
-            0: self.world.move_up,
-            1: self.world.move_down,
-            2: self.world.move_left,
-            3: self.world.move_right,
-        }.get(self.direction)()
+        if pyxel.btn(pyxel.KEY_W):
+            self.world.move_up()
+        if pyxel.btn(pyxel.KEY_D):
+            self.world.move_right()
+        if pyxel.btn(pyxel.KEY_A):
+            self.world.move_left()
+        if pyxel.btn(pyxel.KEY_S):
+            self.world.move_down()
+
 
     def update_world(self):
         """Updates the status of the world."""
@@ -78,5 +76,5 @@ class App:
     def music_controls(self):
         if pyxel.btnp(pyxel.KEY_M):
             pyxel.playm(0, loop=True)
-        if pyxel.btnp(pyxel.KEY_S):
+        if pyxel.btnp(pyxel.KEY_Z):
             pyxel.stop()
