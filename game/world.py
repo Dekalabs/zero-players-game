@@ -3,7 +3,9 @@ from typing import Optional, Tuple
 import numpy as np
 import opensimplex
 
-opensimplex.seed(42)
+from game import SEED
+
+opensimplex.seed(SEED)  # Unix timestamp as world seed
 
 
 class World:
