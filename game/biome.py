@@ -6,7 +6,7 @@ class Biome:
         self.world = world
         self.block_size = block_size
 
-    def draw_world(self):
+    def draw(self):
         """Draws the current view of the world."""
         pyxel.cls(12)
         chunk = self.world.chunk()
@@ -23,8 +23,14 @@ class Biome:
 
     def _color(self, value: float) -> int:
         """Gets the color for a given value."""
-        if value < 0:
-            return 11
-        elif value < 0.4:
+        if value > 0.75:
+            return 7
+        elif 0.45 < value < 0.75:
+            return 4
+        elif 0.4 < value < 0.45:
+            return 9
+        elif 0.35 < value < 0.4:
+            return 15
+        elif 0.1 < value < 0.35:
             return 3
-        return 4
+        return 11

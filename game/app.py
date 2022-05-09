@@ -26,7 +26,13 @@ class App:
         pyxel.init(self.screen_width, self.screen_height, title="Zero Players Game")
         pyxel.playm(0, loop=True)
         pyxel.load("../assets/resources.pyxres")
-        pyxel.run(self.update_world, self.biome.draw_world)
+        pyxel.run(self.update, self.biome.draw)
+
+    def _music(self):
+        if pyxel.btnp(pyxel.KEY_M):
+            pyxel.playm(0, loop=True)
+        if pyxel.btnp(pyxel.KEY_Z):
+            pyxel.stop()
 
     def _step(self) -> None:
         """Make the movement."""
@@ -39,7 +45,7 @@ class App:
         }
         movements.get(movement, lambda: ...)()
 
-    def update_world(self):
+    def update(self):
         """Updates the status of the world."""
         # Handles the quit event
         if pyxel.btnp(pyxel.KEY_Q):
@@ -47,10 +53,4 @@ class App:
         # Movement
         self._step()
         # Music
-        self.music_controls()
-
-    def music_controls(self):
-        if pyxel.btnp(pyxel.KEY_M):
-            pyxel.playm(0, loop=True)
-        if pyxel.btnp(pyxel.KEY_Z):
-            pyxel.stop()
+        self._music()

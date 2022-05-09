@@ -12,7 +12,7 @@ class Path:
     """Class to handle the automatic path selection."""
 
     UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
-    CHANGE_INCREMENT: float = 0.0001
+    CHANGE_INCREMENT: float = 0.00001
 
     def __init__(self) -> None:
         """Initializes with a current direction, and director counter."""

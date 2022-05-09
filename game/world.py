@@ -11,8 +11,8 @@ opensimplex.seed(SEED)  # Unix timestamp as world seed
 class World:
     """Class that represents the generation of the world."""
 
-    INCREMENT: int = 3
-    SCALE: int = 40
+    INCREMENT: int = 1
+    SCALE: int = 45
     BUFFER: int = 3
 
     def __init__(self, rows: int, columns: int, increment: Optional[int] = None):
