@@ -19,6 +19,9 @@ class Cloud:
         y: Optional[int] = None,
         axis: Optional[int] = None,
     ):
+        self.x = x
+        self.y = y
+
         if x is None:
             if axis == Path.LEFT:
                 self.x = -self.WIDTH + random.randint(-self.WIDTH // 3, 0)
@@ -26,8 +29,6 @@ class Cloud:
                 self.x = pyxel.width + random.randint(0, self.WIDTH // 3)
             else:
                 self.x = random.randint(0, pyxel.width)
-        else:
-            self.x = x
 
         if y is None:
             if axis == Path.UP:
@@ -36,8 +37,6 @@ class Cloud:
                 self.y = pyxel.height + random.randint(0, self.HEIGHT // 3)
             else:
                 self.y = random.randint(0, pyxel.height)
-        else:
-            self.y = y
 
     def draw(self):
         pyxel.blt(self.x, self.y, 0, 0, 0, self.WIDTH, self.HEIGHT, 0)
