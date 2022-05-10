@@ -14,6 +14,10 @@ class App:
         self.screen_height = screen_height
         self.block_size = block_size
         self.direction = 0
+        # Init pyxel
+        pyxel.init(self.screen_width, self.screen_height, title="Zero Players Game")
+        pyxel.playm(0, loop=True)
+        pyxel.load("../assets/resources.pyxres")
         # Creates the world
         self.world = World(
             rows=self.screen_height // self.block_size,
@@ -22,10 +26,7 @@ class App:
         # Creates the Biome
         self.biome = Biome(self.world, self.block_size)
         self.path = Path()
-        # Launch pyxel
-        pyxel.init(self.screen_width, self.screen_height, title="Zero Players Game")
-        pyxel.playm(0, loop=True)
-        pyxel.load("../assets/resources.pyxres")
+        # Run pyxel
         pyxel.run(self.update, self.biome.draw)
 
     def _music(self):
@@ -34,7 +35,7 @@ class App:
         if pyxel.btnp(pyxel.KEY_Z):
             pyxel.stop()
 
-    def _step(self) -> None:
+    def _step(self) -> int:
         """Make the movement."""
         movement = self.path.direction()
         movements = {
@@ -44,6 +45,7 @@ class App:
             Path.DOWN: self.world.move_down,
         }
         movements.get(movement, lambda: ...)()
+        return movement
 
     def update(self):
         """Updates the status of the world."""
@@ -51,6 +53,7 @@ class App:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
         # Movement
-        self._step()
+        movement = self._step()
+        self.biome.update(movement)
         # Music
         self._music()
