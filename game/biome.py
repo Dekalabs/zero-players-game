@@ -86,19 +86,11 @@ class Biome:
         chunk = self.world.chunk()
         for _ in range(random.randint(size - 2, size + 2)):
             cloud = Cloud(axis=axis)
-
-            chunk_x = cloud.x // self.block_size
-            if chunk_x >= len(chunk):
-                chunk_x = len(chunk) - 1
-
-            chunk_y = cloud.y // self.block_size
-            if chunk_y >= len(chunk[0]):
-                chunk_y = len(chunk[0]) - 1
-
+            chunk_x = (cloud.x // self.block_size) % chunk.shape[0]
+            chunk_y = (cloud.y // self.block_size) % chunk.shape[1]
             height = chunk[chunk_x, chunk_y]
-            if height > 0.6:
+            if random.random() < height:
                 clouds.append(cloud)
-
         return clouds
 
     def draw(self):
