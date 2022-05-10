@@ -11,18 +11,22 @@ class Cloud:
     INCREMENT: int = 6
     WIDTH: int = 135
     HEIGHT: int = 63
+    SMALL_CLOUD_POSITION: int = 64
 
     def __init__(
         self,
         x: Optional[int] = None,
         y: Optional[int] = None,
         axis: Optional[int] = None,
+        image_tile: Optional[int]= 0
     ):
         """Initializes the cloud. If there isn't any coordinate provided, the cloud
         is located in a random position.
         """
         self.x = x
         self.y = y
+        self.image_tile = image_tile
+
         if x is None:
             if axis == Path.LEFT:
                 self.x = -self.WIDTH + random.randint(-self.WIDTH // 3, 0)
@@ -41,7 +45,7 @@ class Cloud:
 
     def draw(self):
         """Draws the cloud in the screen."""
-        pyxel.blt(self.x, self.y, 0, 0, 0, self.WIDTH, self.HEIGHT, 0)
+        pyxel.blt(self.x, self.y, 0, 0, self.image_tile, self.WIDTH, self.HEIGHT, 0)
 
     def move(self, movement):
         """Move the cloud in the screen."""
@@ -85,7 +89,8 @@ class Biome:
         clouds = []
         chunk = self.world.chunk()
         for _ in range(random.randint(size - 2, size + 2)):
-            cloud = Cloud(axis=axis)
+            cloud_choice = random.choice([0, Cloud.SMALL_CLOUD_POSITION])
+            cloud = Cloud(axis=axis, image_tile=cloud_choice)
             chunk_x = (cloud.x // self.block_size) % chunk.shape[0]
             chunk_y = (cloud.y // self.block_size) % chunk.shape[1]
             height = chunk[chunk_x, chunk_y]
