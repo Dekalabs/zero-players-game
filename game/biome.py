@@ -21,6 +21,8 @@ class Cloud:
         """Initializes the cloud. If there isn't any coordinate provided, the cloud
         is located in a random position.
         """
+        self.x = x
+        self.y = y
         if x is None:
             if axis == Path.LEFT:
                 self.x = -self.WIDTH + random.randint(-self.WIDTH // 3, 0)
@@ -28,8 +30,6 @@ class Cloud:
                 self.x = pyxel.width + random.randint(0, self.WIDTH // 3)
             else:
                 self.x = random.randint(0, pyxel.width)
-        else:
-            self.x = x
 
         if y is None:
             if axis == Path.UP:
@@ -38,8 +38,6 @@ class Cloud:
                 self.y = pyxel.height + random.randint(0, self.HEIGHT // 3)
             else:
                 self.y = random.randint(0, pyxel.height)
-        else:
-            self.y = y
 
     def draw(self):
         """Draws the cloud in the screen."""
@@ -61,6 +59,8 @@ class Cloud:
 
 
 class Biome:
+    CLOUD_PROBABILITY: float = 0.3
+
     def __init__(self, world, block_size: int):
         self.world = world
         self.block_size = block_size
@@ -82,7 +82,24 @@ class Biome:
         return 11
 
     def _cloud_generator(self, size: int, axis: Optional[int] = None):
-        return [Cloud(axis=axis) for _ in range(random.randint(size - 2, size + 2))]
+        clouds = []
+        chunk = self.world.chunk()
+        for _ in range(random.randint(size - 2, size + 2)):
+            cloud = Cloud(axis=axis)
+
+            chunk_x = cloud.x // self.block_size
+            if chunk_x >= len(chunk):
+                chunk_x = len(chunk) - 1
+
+            chunk_y = cloud.y // self.block_size
+            if chunk_y >= len(chunk[0]):
+                chunk_y = len(chunk[0]) - 1
+
+            height = chunk[chunk_x, chunk_y]
+            if height > 0.6:
+                clouds.append(cloud)
+
+        return clouds
 
     def draw(self):
         """Draws the current view of the world."""
@@ -104,9 +121,18 @@ class Biome:
     def update(self, movement: int):
         """Updates the biome using the provided movement."""
         for cloud in self.clouds:
-            cloud.move(movement=movement)
+            if (
+                cloud.x
+                > pyxel.width + Cloud.WIDTH | cloud.x
+                < 0 | cloud.y
+                > pyxel.height + Cloud.HEIGHT | cloud.y
+                < 0
+            ):
+                self.clouds.remove(cloud)
+            elif movement:
+                cloud.move(movement=movement)
         if movement:
             generate = random.random()
-            if generate > 0.965:
+            if generate > self.CLOUD_PROBABILITY:
                 size = random.randint(0, 2)
                 self.clouds += self._cloud_generator(size=size, axis=movement)
