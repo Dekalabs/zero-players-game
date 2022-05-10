@@ -3,6 +3,8 @@ from typing import Optional
 
 import pyxel
 
+import operator
+
 from game.paths import Path
 
 
@@ -41,15 +43,14 @@ class Cloud:
         pyxel.blt(self.x, self.y, 0, 0, 0, self.WIDTH, self.HEIGHT, 0)
 
     def move(self, movement):
-        if movement == Path.UP:
-            self.y += self.INCREMENT
-        elif movement == Path.DOWN:
-            self.y -= self.INCREMENT
-        elif movement == Path.LEFT:
-            self.x += self.INCREMENT
-        elif movement == Path.RIGHT:
-            self.x -= self.INCREMENT
+        operation = {
+            Path.UP: (operator.add, "y"),
+            Path.RIGHT: (operator.sub, "x"),
+            Path.LEFT: (operator.add, "x"),
+            Path.DOWN: (operator.sub, "y"),
+        }.get(movement)
 
+        setattr(self, operation[1], operation[0](getattr(self, operation[1]), self.INCREMENT))
 
 class Biome:
     def __init__(self, world, block_size: int):
