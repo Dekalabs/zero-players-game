@@ -1,4 +1,5 @@
 import pyxel
+from numpy import tile
 
 from game.biome import Biome
 from game.paths import Path
