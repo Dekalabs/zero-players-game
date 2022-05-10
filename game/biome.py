@@ -3,6 +3,8 @@ from typing import Optional
 
 import pyxel
 
+import operator
+
 from game.paths import Path
 
 
@@ -17,6 +19,9 @@ class Cloud:
         y: Optional[int] = None,
         axis: Optional[int] = None,
     ):
+        self.x = x
+        self.y = y
+
         if x is None:
             if axis == Path.LEFT:
                 self.x = -self.WIDTH + random.randint(-self.WIDTH // 3, 0)
@@ -24,8 +29,6 @@ class Cloud:
                 self.x = pyxel.width + random.randint(0, self.WIDTH // 3)
             else:
                 self.x = random.randint(0, pyxel.width)
-        else:
-            self.x = x
 
         if y is None:
             if axis == Path.UP:
@@ -34,22 +37,19 @@ class Cloud:
                 self.y = pyxel.height + random.randint(0, self.HEIGHT // 3)
             else:
                 self.y = random.randint(0, pyxel.height)
-        else:
-            self.y = y
 
     def draw(self):
         pyxel.blt(self.x, self.y, 0, 0, 0, self.WIDTH, self.HEIGHT, 0)
 
     def move(self, movement):
-        if movement == Path.UP:
-            self.y += self.INCREMENT
-        elif movement == Path.DOWN:
-            self.y -= self.INCREMENT
-        elif movement == Path.LEFT:
-            self.x += self.INCREMENT
-        elif movement == Path.RIGHT:
-            self.x -= self.INCREMENT
+        operation = {
+            Path.UP: (operator.add, "y"),
+            Path.RIGHT: (operator.sub, "x"),
+            Path.LEFT: (operator.add, "x"),
+            Path.DOWN: (operator.sub, "y"),
+        }.get(movement)
 
+        setattr(self, operation[1], operation[0](getattr(self, operation[1]), self.INCREMENT))
 
 class Biome:
     CLOUD_PROBABILITY: float = 0.3
