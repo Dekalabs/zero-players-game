@@ -6,6 +6,18 @@ import pyxel
 
 from game.paths import Path
 
+class Drone:
+    def __init__(self):
+        self.width = 64
+        self.height = 64
+        
+        self.x = pyxel.screen.width // 2 - self.height // 2
+        self.y = pyxel.screen.height // 2 - self.width // 2
+
+
+    def draw(self):
+        """Draws the cloud in the screen."""
+        pyxel.blt(self.x, self.y, 1, 0, 0, self.width-1, self.height-1, 7)
 
 class Cloud:
     INCREMENT: int = 6
@@ -71,6 +83,8 @@ class Biome:
         # Generates the cloud in the biome
         self.clouds = self._cloud_generator(random.randint(4, 8))
 
+        self.drone = Drone()
+
     def _color(self, value: float) -> int:
         """Gets the color for a given value."""
         if value > 0.75:
@@ -112,8 +126,13 @@ class Biome:
                     self.block_size,
                     color,
                 )
+
+        #Drone
+        self.drone.draw()
+
         # Clouds
         [cloud.draw() for cloud in self.clouds]
+
 
     def update(self, movement: int):
         """Updates the biome using the provided movement."""

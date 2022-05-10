@@ -27,6 +27,7 @@ class App:
         # Creates the Biome
         self.biome = Biome(self.world, self.block_size)
         self.path = Path()
+
         # Run pyxel
         pyxel.run(self.update, self.biome.draw)
 
@@ -56,5 +57,7 @@ class App:
         # Movement
         movement = self._step()
         self.biome.update(movement)
+
         # Music
         self._music()
+
