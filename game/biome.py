@@ -52,6 +52,8 @@ class Cloud:
 
 
 class Biome:
+    CLOUD_PROBABILITY: float = 0.3
+
     def __init__(self, world, block_size: int):
         self.world = world
         self.block_size = block_size
@@ -89,14 +91,34 @@ class Biome:
         return 11
 
     def _cloud_generator(self, size: int, axis: Optional[int] = None):
-        return [Cloud(axis=axis) for _ in range(random.randint(size - 2, size + 2))]
+        clouds = []
+        chunk = self.world.chunk()
+        for _ in range(random.randint(size - 2, size + 2)):
+            cloud = Cloud(axis=axis)  
+
+            chunk_x = cloud.x // self.block_size
+            if chunk_x >= len(chunk):
+                chunk_x = len(chunk)-1
+
+            chunk_y = cloud.y // self.block_size
+            if (chunk_y >= len(chunk[0])):
+                chunk_y = len(chunk[0])-1
+
+            height = chunk[chunk_x, chunk_y ]
+            if height > 0.6:
+                clouds.append(cloud)      
+
+        return clouds
 
     def update(self, movement: int):
         for cloud in self.clouds:
-            cloud.move(movement=movement)
+            if cloud.x > pyxel.width+Cloud.WIDTH | cloud.x < 0 | cloud.y > pyxel.height+Cloud.HEIGHT | cloud.y < 0:
+                self.clouds.remove(cloud)
+            elif movement:
+                cloud.move(movement=movement)
 
         if movement:
             generate = random.random()
-            if generate > 0.965:
+            if generate > self.CLOUD_PROBABILITY:
                 size = random.randint(0, 2)
                 self.clouds += self._cloud_generator(size=size, axis=movement)
