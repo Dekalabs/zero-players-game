@@ -1,9 +1,8 @@
+import operator
 import random
 from typing import Optional
 
 import pyxel
-
-import operator
 
 from game.paths import Path
 
@@ -19,6 +18,9 @@ class Cloud:
         y: Optional[int] = None,
         axis: Optional[int] = None,
     ):
+        """Initializes the cloud. If there isn't any coordinate provided, the cloud
+        is located in a random position.
+        """
         if x is None:
             if axis == Path.LEFT:
                 self.x = -self.WIDTH + random.randint(-self.WIDTH // 3, 0)
@@ -40,40 +42,30 @@ class Cloud:
             self.y = y
 
     def draw(self):
+        """Draws the cloud in the screen."""
         pyxel.blt(self.x, self.y, 0, 0, 0, self.WIDTH, self.HEIGHT, 0)
 
     def move(self, movement):
+        """Move the cloud in the screen."""
         operation = {
             Path.UP: (operator.add, "y"),
             Path.RIGHT: (operator.sub, "x"),
             Path.LEFT: (operator.add, "x"),
             Path.DOWN: (operator.sub, "y"),
         }.get(movement)
+        setattr(
+            self,
+            operation[1],
+            operation[0](getattr(self, operation[1]), self.INCREMENT),
+        )
 
-        setattr(self, operation[1], operation[0](getattr(self, operation[1]), self.INCREMENT))
 
 class Biome:
     def __init__(self, world, block_size: int):
         self.world = world
         self.block_size = block_size
+        # Generates the cloud in the biome
         self.clouds = self._cloud_generator(random.randint(4, 8))
-
-    def draw(self):
-        """Draws the current view of the world."""
-        pyxel.cls(12)
-        chunk = self.world.chunk()
-        for x in range(chunk.shape[0]):
-            for y in range(chunk.shape[1]):
-                color = self._color(value=chunk[x, y])
-                pyxel.rect(
-                    y * self.block_size,
-                    x * self.block_size,
-                    self.block_size,
-                    self.block_size,
-                    color,
-                )
-        # Clouds
-        [cloud.draw() for cloud in self.clouds]
 
     def _color(self, value: float) -> int:
         """Gets the color for a given value."""
@@ -92,10 +84,27 @@ class Biome:
     def _cloud_generator(self, size: int, axis: Optional[int] = None):
         return [Cloud(axis=axis) for _ in range(random.randint(size - 2, size + 2))]
 
+    def draw(self):
+        """Draws the current view of the world."""
+        pyxel.cls(12)
+        chunk = self.world.chunk()
+        for x in range(chunk.shape[0]):
+            for y in range(chunk.shape[1]):
+                color = self._color(value=chunk[x, y])
+                pyxel.rect(
+                    y * self.block_size,
+                    x * self.block_size,
+                    self.block_size,
+                    self.block_size,
+                    color,
+                )
+        # Clouds
+        [cloud.draw() for cloud in self.clouds]
+
     def update(self, movement: int):
+        """Updates the biome using the provided movement."""
         for cloud in self.clouds:
             cloud.move(movement=movement)
-
         if movement:
             generate = random.random()
             if generate > 0.965:
